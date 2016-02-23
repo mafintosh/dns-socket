@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "WIP - nothing to see here",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "dns-packet": "^1.1.0"
+  },
   "devDependencies": {
     "standard": "^6.0.7",
     "tape": "^4.4.0"

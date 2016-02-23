@@ -145,7 +145,7 @@ DNS.prototype.response = function (query, response, port, host) {
   response.id = query.id
 
   var buffer = packet.encode(response)
-  this.socket.send(buffer, 0, buffer.length, port, host)
+  this.socket.send(buffer, 0, buffer.length, port, host || '127.0.0.1')
 }
 
 DNS.prototype.cancel = function (id) {
@@ -189,7 +189,7 @@ DNS.prototype.query = function (query, port, host, cb) {
     host: host
   }
 
-  this.socket.send(buffer, 0, buffer.length, port, host)
+  this.socket.send(buffer, 0, buffer.length, port, host || '127.0.0.1')
   return query.id
 }
 

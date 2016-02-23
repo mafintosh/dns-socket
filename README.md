@@ -6,6 +6,8 @@ Make custom low-level DNS requests from node with retry support.
 npm install dns-socket
 ```
 
+[![build status](https://travis-ci.org/mafintosh/dns-socket.svg?branch=master)](https://travis-ci.org/mafintosh/dns-socket)
+
 ## Usage
 
 ``` js

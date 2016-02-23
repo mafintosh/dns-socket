@@ -146,10 +146,25 @@ DNS.prototype.response = function (query, response, port, host) {
   this.socket.send(buffer, 0, buffer.length, port, host)
 }
 
+DNS.prototype.cancel = function (id) {
+  var i = this._ids.indexOf(id)
+  var q = this._queries[i]
+  if (!q) return
+
+  this._queries[i] = null
+  this._ids[i] = 0
+  this.inflight--
+  q.callback(new Error('Query cancelled'))
+}
+
 DNS.prototype.query = function (query, port, host, cb) {
   if (typeof host === 'function') return this.query(query, port, null, host)
   if (!cb) cb = noop
-  if (this.destroyed) return cb(new Error('Socket destroyed'))
+
+  if (this.destroyed) {
+    nextTick(cb, new Error('Socket destroyed'))
+    return 0
+  }
 
   this.inflight++
   query.type = 'query'
@@ -173,6 +188,13 @@ DNS.prototype.query = function (query, port, host, cb) {
   }
 
   this.socket.send(buffer, 0, buffer.length, port, host)
+  return query.id
 }
 
 function noop () {}
+
+function nextTick (cb, err) {
+  process.nextTick(function () {
+    cb(err)
+  })
+}

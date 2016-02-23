@@ -44,13 +44,19 @@ Emitted when a dns query is received. The query is a [dns-packet](https://github
 
 Emitted when a dns response is received. The response is a [dns-packet](https://github.com/mafintosh/dns-packet)
 
-#### `socket.query(query, port, [host], [callback])`
+#### `var id = socket.query(query, port, [host], [callback])`
 
 Send a dns query. If host is emitted it defaults to localhost. When the remote replies the callback is called with `(err, response)` and an response is emitted as well. If the query times out the callback is called with an error.
+
+Returns the query id
 
 #### `socket.response(query, response, port, [host])`
 
 Send a response to a query.
+
+#### `socket.cancel(id)`
+
+Cancel a query
 
 #### `socket.bind(port, [onlistening])`
 

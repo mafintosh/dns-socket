@@ -110,12 +110,14 @@ DNS.prototype._onmessage = function (buffer, rinfo) {
 
   if (message.type === 'response' && message.id) {
     var i = this._ids.indexOf(message.id)
-    var q = this._queries[i]
-    this.inflight--
-    this._ids[i] = 0
-    this._queries[i] = null
-    this._trim()
-    if (q) q.callback(null, message, rinfo.port, rinfo.address)
+    var q = i > -1 ? this._queries[i] : null
+    if (q) {
+      this.inflight--
+      this._ids[i] = 0
+      this._queries[i] = null
+      this._trim()
+      q.callback(null, message, rinfo.port, rinfo.address)
+    }
   }
 
   this.emit(message.type, message, rinfo.port, rinfo.address)

@@ -12,6 +12,7 @@ function DNS (opts) {
 
   var self = this
 
+  this.retries = opts.retries || 5
   this.destroyed = false
   this.inflight = 0
   this.socket = opts.socket || dgram.createSocket('udp4')
@@ -178,11 +179,14 @@ DNS.prototype.query = function (query, port, host, cb) {
   if (this._queries.length === i) this._queries.push(null)
 
   var buffer = packet.encode(query)
+  var tries = [3, 4, 8, 16] // ~1s, 1s, 2s, 4s
+
+  if (this.retries < tries.length) tries = tries.slice(0, this.retries)
 
   this._ids[i] = query.id
   this._queries[i] = {
     callback: cb,
-    tries: [3, 4, 8, 16], // ~1s, 1s, 2s, 4s
+    tries: tries,
     query: query,
     buffer: buffer,
     port: port,

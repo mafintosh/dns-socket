@@ -116,7 +116,7 @@ DNS.prototype._onmessage = function (buffer, rinfo) {
       this._ids[i] = 0
       this._queries[i] = null
       this._trim()
-      q.callback(null, message, rinfo.port, rinfo.address)
+      q.callback(null, message, q.query, rinfo.port, rinfo.address)
     }
   }
 

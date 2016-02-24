@@ -160,6 +160,19 @@ DNS.prototype.cancel = function (id) {
   q.callback(new Error('Query cancelled'))
 }
 
+DNS.prototype.setRetries = function (id, retries) {
+  var i = this._ids.indexOf(id)
+  var q = this._queries[i]
+  if (!q) return
+
+  while (q.tries.length < retries) {
+    q.tries.push(q.tries.length ? 2 * q.tries[q.tries.length - 1] : 4)
+  }
+  if (q.tries.length > retries) {
+    q.tries = q.tries.slice(0, retries)
+  }
+}
+
 DNS.prototype.query = function (query, port, host, cb) {
   if (typeof host === 'function') return this.query(query, port, null, host)
   if (!cb) cb = noop

@@ -184,7 +184,7 @@ DNS.prototype.query = function (query, port, host, cb) {
 
   this.inflight++
   query.type = 'query'
-  if (!query.id) query.id = this._id++
+  var id = query.id = this._id++
   if (this.id === 65535) this._id = 1
 
   var i = this._ids.indexOf(0)
@@ -196,7 +196,7 @@ DNS.prototype.query = function (query, port, host, cb) {
 
   if (this.retries < tries.length) tries = tries.slice(0, this.retries)
 
-  this._ids[i] = query.id
+  this._ids[i] = id
   this._queries[i] = {
     callback: cb,
     tries: tries,
@@ -207,7 +207,7 @@ DNS.prototype.query = function (query, port, host, cb) {
   }
 
   this.socket.send(buffer, 0, buffer.length, port, host || '127.0.0.1')
-  return query.id
+  return id
 }
 
 function noop () {}

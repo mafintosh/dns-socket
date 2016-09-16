@@ -185,7 +185,7 @@ DNS.prototype.query = function (query, port, host, cb) {
   this.inflight++
   query.type = 'query'
   var id = query.id = this._id++
-  if (this.id === 65535) this._id = 1
+  if (this._id === 65535) this._id = 1
 
   var i = this._ids.indexOf(0)
   if (i === -1) i = this._ids.push(0) - 1

@@ -38,9 +38,7 @@ function DNS (opts) {
   }
 
   function onlistening () {
-    var timeSlices = self._triesArray.reduce(function (prev, curr) {
-      return prev + curr
-    }, 0)
+    var timeSlices = self._triesArray.reduce(add, 0)
     self._interval = setInterval(ontimeout, Math.round(self.timeout / timeSlices))
     self.emit('listening')
   }
@@ -221,6 +219,10 @@ function nextTick (cb, err) {
   process.nextTick(function () {
     cb(err)
   })
+}
+
+function add (a, b) {
+  return a + b
 }
 
 function getTriesArray (retries) {

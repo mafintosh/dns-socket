@@ -8,7 +8,6 @@ module.exports = DNS
 function DNS (opts) {
   if (!(this instanceof DNS)) return new DNS(opts)
   if (!opts) opts = {}
-  opts.flags = opts.flags || DNS.RECURSION_DESIRED
 
   events.EventEmitter.call(this)
 
@@ -189,6 +188,7 @@ DNS.prototype.query = function (query, port, host, cb) {
 
   this.inflight++
   query.type = 'query'
+  query.flags = typeof query.flags === 'number' ? query.flags : DNS.RECURSION_DESIRED
   var id = query.id = this._id++
   if (this._id === 65535) this._id = 1
 

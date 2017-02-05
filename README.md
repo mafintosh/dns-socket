@@ -30,9 +30,9 @@ socket.query({
 
 Create a new DNS socket instance. The `options` object includes:
 
-- `retries` <Number>: Number of total query attempts made during `timeout`. Default: 5.
-- `socket` <Object>: A custom dgram socket. Default: A `'udp4'` socket.
-- `timeout` <Number>: Total timeout in milliseconds after which a `'timeout'` event is emitted. Default: 7500.
+- `retries` *Number*: Number of total query attempts made during `timeout`. Default: 5.
+- `socket` *Object*: A custom dgram socket. Default: A `'udp4'` socket.
+- `timeout` *Number*: Total timeout in milliseconds after which a `'timeout'` event is emitted. Default: 7500.
 
 #### `socket.on('query', query, port, host)`
 

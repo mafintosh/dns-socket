@@ -8,6 +8,8 @@ module.exports = DNS
 function DNS (opts) {
   if (!(this instanceof DNS)) return new DNS(opts)
   if (!opts) opts = {}
+  opts.flags = opts.flags || DNS.RECURSION_DESIRED
+
   events.EventEmitter.call(this)
 
   var self = this

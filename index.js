@@ -15,6 +15,7 @@ function DNS (opts) {
   var self = this
 
   this.retries = opts.retries || 5
+  this.timeout = opts.timeout || 7500
   this.destroyed = false
   this.inflight = 0
   this.socket = opts.socket || dgram.createSocket('udp4')
@@ -27,6 +28,7 @@ function DNS (opts) {
   this._ids = []
   this._queries = []
   this._interval = null
+  this._triesArray = getTriesArray(this.retries) // default: [2, 4, 8, 16] = .5s, 1s, 2s, 4s
 
   function onerror (err) {
     if (err.code === 'EACCES' || err.code === 'EADDRINUSE') self.emit('error', err)
@@ -38,7 +40,8 @@ function DNS (opts) {
   }
 
   function onlistening () {
-    self._interval = setInterval(ontimeout, 250)
+    var timeSlices = self._triesArray.reduce(add, 0)
+    self._interval = setInterval(ontimeout, Math.round(self.timeout / timeSlices))
     self.emit('listening')
   }
 
@@ -194,7 +197,7 @@ DNS.prototype.query = function (query, port, host, cb) {
   if (this._queries.length === i) this._queries.push(null)
 
   var buffer = packet.encode(query)
-  var tries = [3, 4, 8, 16] // ~1s, 1s, 2s, 4s
+  var tries = this._triesArray
 
   if (this.retries < tries.length) tries = tries.slice(0, this.retries)
 
@@ -218,4 +221,17 @@ function nextTick (cb, err) {
   process.nextTick(function () {
     cb(err)
   })
+}
+
+function add (a, b) {
+  return a + b
+}
+
+function getTriesArray (retries) {
+  var ret = []
+  if (retries <= 1) return ret
+  for (var i = 1; i <= retries - 1; i++) {
+    ret.push(Math.pow(2, i))
+  }
+  return ret
 }

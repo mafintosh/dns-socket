@@ -1,6 +1,6 @@
 {
   "name": "dns-socket",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Make custom low-level DNS requests from node with retry support.",
   "main": "index.js",
   "dependencies": {

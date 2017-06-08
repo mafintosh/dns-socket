@@ -197,9 +197,7 @@ DNS.prototype.query = function (query, port, host, cb) {
   if (this._queries.length === i) this._queries.push(null)
 
   var buffer = packet.encode(query)
-  var tries = this._triesArray
-
-  if (this.retries < tries.length) tries = tries.slice(0, this.retries)
+  var tries = this._triesArray.slice(0)
 
   this._ids[i] = id
   this._queries[i] = {

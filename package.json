@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://github.com/mafintosh/dns-socket.git"
   },
+  "files": [
+    "index.js"
+  ],
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "bugs": {

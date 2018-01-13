@@ -18,16 +18,17 @@ function DNS (opts) {
   this.destroyed = false
   this.inflight = 0
   this.socket = opts.socket || dgram.createSocket('udp4')
-  this.socket.on('error', onerror)
-  this.socket.on('message', onmessage)
-  this.socket.on('listening', onlistening)
-  this.socket.on('close', onclose)
-
   this._id = Math.ceil(Math.random() * 65535)
   this._ids = []
   this._queries = []
   this._interval = null
   this._triesArray = getTriesArray(this.retries) // default: [2, 4, 8, 16] = .5s, 1s, 2s, 4s
+
+  this.socket.on('error', onerror)
+  this.socket.on('message', onmessage)
+  if (isListening(this.socket)) onlistening()
+  else this.socket.on('listening', onlistening)
+  this.socket.on('close', onclose)
 
   function onerror (err) {
     if (err.code === 'EACCES' || err.code === 'EADDRINUSE') self.emit('error', err)
@@ -232,4 +233,12 @@ function getTriesArray (retries) {
     ret.push(Math.pow(2, i))
   }
   return ret
+}
+
+function isListening (socket) {
+  try {
+    return socket.address().port !== 0
+  } catch (err) {
+    return false
+  }
 }

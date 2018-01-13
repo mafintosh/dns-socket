@@ -7,8 +7,8 @@
     "dns-packet": "^1.1.0"
   },
   "devDependencies": {
-    "standard": "^6.0.7",
-    "tape": "^4.4.0"
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
   },
   "scripts": {
     "test": "standard && tape test.js"

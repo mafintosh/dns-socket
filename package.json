@@ -1,6 +1,6 @@
 {
   "name": "dns-socket",
-  "version": "1.6.3",
+  "version": "2.0.0",
   "description": "Make custom low-level DNS requests from node with retry support.",
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",

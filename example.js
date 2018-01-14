@@ -1,6 +1,7 @@
-var dns = require('./')
+'use strict'
 
-var socket = dns()
+const dns = require('./')
+const socket = dns()
 
 socket.query({
   flags: dns.RECURSION_DESIRED,

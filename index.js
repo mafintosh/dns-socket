@@ -1,7 +1,9 @@
-var dgram = require('dgram')
-var util = require('util')
-var packet = require('dns-packet')
-var events = require('events')
+'use strict'
+
+const dgram = require('dgram')
+const util = require('util')
+const packet = require('dns-packet')
+const events = require('events')
 
 module.exports = DNS
 
@@ -11,7 +13,7 @@ function DNS (opts) {
 
   events.EventEmitter.call(this)
 
-  var self = this
+  const self = this
 
   this.retries = opts.retries || 5
   this.timeout = opts.timeout || 7500
@@ -40,7 +42,7 @@ function DNS (opts) {
   }
 
   function onlistening () {
-    var timeSlices = self._triesArray.reduce(add, 0)
+    const timeSlices = self._triesArray.reduce(add, 0)
     self._interval = setInterval(ontimeout, Math.round(self.timeout / timeSlices))
     self.emit('listening')
   }
@@ -78,8 +80,8 @@ DNS.prototype.destroy = function (onclose) {
   this.destroyed = true
   clearInterval(this._interval)
   this.socket.close()
-  for (var i = 0; i < this._queries.length; i++) {
-    var q = this._queries[i]
+  for (let i = 0; i < this._queries.length; i++) {
+    const q = this._queries[i]
     if (q) q.callback(new Error('Socket destroyed'))
   }
   this._queries = []
@@ -88,8 +90,8 @@ DNS.prototype.destroy = function (onclose) {
 }
 
 DNS.prototype._ontimeout = function () {
-  for (var i = 0; i < this._queries.length; i++) {
-    var q = this._queries[i]
+  for (let i = 0; i < this._queries.length; i++) {
+    const q = this._queries[i]
     if (!q) continue
     if (!q.tries.length) {
       this._queries[i] = null
@@ -107,16 +109,18 @@ DNS.prototype._ontimeout = function () {
 }
 
 DNS.prototype._onmessage = function (buffer, rinfo) {
+  let message
+
   try {
-    var message = packet.decode(buffer)
+    message = packet.decode(buffer)
   } catch (err) {
     this.emit('warning', err)
     return
   }
 
   if (message.type === 'response' && message.id) {
-    var i = this._ids.indexOf(message.id)
-    var q = i > -1 ? this._queries[i] : null
+    const i = this._ids.indexOf(message.id)
+    const q = i > -1 ? this._queries[i] : null
     if (q) {
       this.inflight--
       this._ids[i] = 0
@@ -150,13 +154,13 @@ DNS.prototype.response = function (query, response, port, host) {
   response.type = 'response'
   response.id = query.id
 
-  var buffer = packet.encode(response)
+  const buffer = packet.encode(response)
   this.socket.send(buffer, 0, buffer.length, port, host || '127.0.0.1')
 }
 
 DNS.prototype.cancel = function (id) {
-  var i = this._ids.indexOf(id)
-  var q = this._queries[i]
+  const i = this._ids.indexOf(id)
+  const q = this._queries[i]
   if (!q) return
 
   this._queries[i] = null
@@ -166,8 +170,8 @@ DNS.prototype.cancel = function (id) {
 }
 
 DNS.prototype.setRetries = function (id, retries) {
-  var i = this._ids.indexOf(id)
-  var q = this._queries[i]
+  const i = this._ids.indexOf(id)
+  const q = this._queries[i]
   if (!q) return
 
   while (q.tries.length < retries) {
@@ -190,15 +194,15 @@ DNS.prototype.query = function (query, port, host, cb) {
   this.inflight++
   query.type = 'query'
   query.flags = typeof query.flags === 'number' ? query.flags : DNS.RECURSION_DESIRED
-  var id = query.id = this._id++
+  const id = query.id = this._id++
   if (this._id === 65535) this._id = 1
 
-  var i = this._ids.indexOf(0)
+  let i = this._ids.indexOf(0)
   if (i === -1) i = this._ids.push(0) - 1
   if (this._queries.length === i) this._queries.push(null)
 
-  var buffer = packet.encode(query)
-  var tries = this._triesArray.slice(0)
+  const buffer = packet.encode(query)
+  const tries = this._triesArray.slice(0)
 
   this._ids[i] = id
   this._queries[i] = {
@@ -227,9 +231,9 @@ function add (a, b) {
 }
 
 function getTriesArray (retries) {
-  var ret = []
+  const ret = []
   if (retries <= 1) return ret
-  for (var i = 1; i <= retries - 1; i++) {
+  for (let i = 1; i <= retries - 1; i++) {
     ret.push(Math.pow(2, i))
   }
   return ret

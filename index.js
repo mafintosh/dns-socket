@@ -20,6 +20,7 @@ function DNS (opts) {
   this.destroyed = false
   this.inflight = 0
   this.socket = opts.socket || dgram.createSocket('udp4')
+  //console.log(this.socket);
   this._id = Math.ceil(Math.random() * 65535)
   this._ids = []
   this._queries = []
@@ -69,9 +70,9 @@ DNS.prototype.address = function () {
   return this.socket.address()
 }
 
-DNS.prototype.bind = function (port, onlistening) {
+DNS.prototype.bind = function (port, host, onlistening) {
   if (onlistening) this.once('listening', onlistening)
-  this.socket.bind(port)
+  this.socket.bind(port, host)
 }
 
 DNS.prototype.destroy = function (onclose) {

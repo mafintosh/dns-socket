@@ -1,6 +1,6 @@
 'use strict'
 
-const dns = require('./')
+const dns = require('.')
 const socket = dns()
 
 socket.query({

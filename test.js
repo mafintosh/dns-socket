@@ -2,7 +2,7 @@
 
 const tape = require('tape')
 const dgram = require('dgram')
-const dns = require('./')
+const dns = require('.')
 
 tape('query + response', function (t) {
   const socket = dns()

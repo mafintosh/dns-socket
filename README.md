@@ -1,4 +1,6 @@
 # dns-socket
+[![](https://img.shields.io/npm/v/dns-socket.svg?style=flat)](https://www.npmjs.org/package/dns-socket) [![](https://img.shields.io/npm/dm/dns-socket.svg)](https://www.npmjs.org/package/dns-socket) [![](https://api.travis-ci.org/mafintosh/dns-socket.svg?style=flat)](https://travis-ci.org/mafintosh/dns-socket)
+
 
 Make custom low-level DNS requests from node with retry support.
 
@@ -6,20 +8,18 @@ Make custom low-level DNS requests from node with retry support.
 npm install dns-socket
 ```
 
-[![build status](https://travis-ci.org/mafintosh/dns-socket.svg?branch=master)](https://travis-ci.org/mafintosh/dns-socket)
-
 ## Usage
 
 ``` js
-var dns = require('dns-socket')
-var socket = dns()
+const dns = require('dns-socket')
+const socket = dns()
 
 socket.query({
   questions: [{
     type: 'A',
     name: 'google.com'
   }]
-}, 53, '8.8.8.8', function (err, res) {
+}, 53, '8.8.8.8', (err, res) => {
   console.log(err, res) // prints the A record for google.com
 })
 ```

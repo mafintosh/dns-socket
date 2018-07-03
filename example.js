@@ -1,10 +1,10 @@
 'use strict'
 
-const dns = require('.')
-const socket = dns()
+const dnsSocket = require('.')
+const socket = dnsSocket()
 
 socket.query({
-  flags: dns.RECURSION_DESIRED,
+  flags: dnsSocket.RECURSION_DESIRED,
   questions: [{
     type: 'ANY',
     name: 'www.dr.dk'

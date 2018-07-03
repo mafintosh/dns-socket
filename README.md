@@ -1,8 +1,7 @@
 # dns-socket
 [![](https://img.shields.io/npm/v/dns-socket.svg?style=flat)](https://www.npmjs.org/package/dns-socket) [![](https://img.shields.io/npm/dm/dns-socket.svg)](https://www.npmjs.org/package/dns-socket) [![](https://api.travis-ci.org/mafintosh/dns-socket.svg?style=flat)](https://travis-ci.org/mafintosh/dns-socket)
 
-
-Make custom low-level DNS requests from node with retry support.
+Make low-level DNS requests with retry and timeout support.
 
 ```
 npm install dns-socket
@@ -11,8 +10,8 @@ npm install dns-socket
 ## Usage
 
 ``` js
-const dns = require('dns-socket')
-const socket = dns()
+const dnsSocket = require('dns-socket')
+const socket = dnsSocket()
 
 socket.query({
   questions: [{

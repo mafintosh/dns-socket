@@ -1,7 +1,7 @@
 {
   "name": "dns-socket",
   "version": "4.0.0",
-  "description": "Make custom low-level DNS requests from node with retry support.",
+  "description": "Make low-level DNS requests with retry and timeout support.",
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "repository": "mafintosh/dns-socket",

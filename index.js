@@ -69,9 +69,10 @@ DNS.prototype.address = function () {
   return this.socket.address()
 }
 
-DNS.prototype.bind = function (port, onlistening) {
+DNS.prototype.bind = function (...args) {
+  const onlistening = args[args.length - 1]
   if (onlistening) this.once('listening', onlistening)
-  this.socket.bind(port)
+  this.socket.bind(...args.slice(0, -1))
 }
 
 DNS.prototype.destroy = function (onclose) {

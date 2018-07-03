@@ -56,9 +56,10 @@ Send a response to a query.
 
 Cancel a query
 
-#### `socket.bind(port, [onlistening])`
+#### `socket.bind([port][, address][, onlistening])`
+#### `socket.bind(options, [onlistening])`
 
-Bind the underlying udp socket to a specific port.
+Bind the underlying udp socket to a specific port. Takes the same arguments as [socket#bind](https://nodejs.org/docs/latest/api/dgram.html#dgram_socket_bind_port_address_callback).
 
 #### `socket.destroy([onclose])`
 

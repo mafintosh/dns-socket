@@ -1,6 +1,6 @@
 {
   "name": "dns-socket",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Make low-level DNS requests with retry and timeout support.",
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",

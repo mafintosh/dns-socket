@@ -70,9 +70,13 @@ DNS.prototype.address = function () {
 }
 
 DNS.prototype.bind = function (...args) {
-  const onlistening = args[args.length - 1]
-  if (onlistening) this.once('listening', onlistening)
-  this.socket.bind(...args.slice(0, -1))
+  const onlistening = args.length > 0 && args[args.length - 1]
+  if (typeof onlistening === 'function') {
+    this.once('listening', onlistening)
+    this.socket.bind(...args.slice(0, -1))
+  } else {
+    this.socket.bind(...args)
+  }
 }
 
 DNS.prototype.destroy = function (onclose) {

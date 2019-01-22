@@ -41,7 +41,7 @@ tape('pass socket + query + response', function (t) {
   const udp = dgram.createSocket('udp4')
 
   udp.bind(0, function () {
-    const socket = dns({socket: udp})
+    const socket = dns({ socket: udp })
 
     socket.on('query', function (query, port, host) {
       socket.response(query, {
@@ -86,7 +86,7 @@ tape('timeout', function (t) {
     }, 10000)
 
     const id = socket.query({
-      questions: [{type: 'A', name: 'test'}]
+      questions: [{ type: 'A', name: 'test' }]
     }, dummy.address().port, function (err) {
       if (done) return
       clearTimeout(timeout)
@@ -107,7 +107,7 @@ tape('pass socket + timeout', function (t) {
   dummy.bind(0, function () {
     udp.bind(0, function () {
       let done = false
-      const socket = dns({socket: udp})
+      const socket = dns({ socket: udp })
 
       const timeout = setTimeout(function () {
         done = true
@@ -118,7 +118,7 @@ tape('pass socket + timeout', function (t) {
       }, 10000)
 
       const id = socket.query({
-        questions: [{type: 'A', name: 'test'}]
+        questions: [{ type: 'A', name: 'test' }]
       }, dummy.address().port, function (err) {
         if (done) return
         clearTimeout(timeout)

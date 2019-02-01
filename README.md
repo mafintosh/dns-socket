@@ -32,6 +32,9 @@ Create a new DNS socket instance. The `options` object includes:
 - `retries` *Number*: Number of total query attempts made during `timeout`. Default: 5.
 - `socket` *Object*: A custom dgram socket. Default: A `'udp4'` socket.
 - `timeout` *Number*: Total timeout in milliseconds after which a `'timeout'` event is emitted. Default: 7500.
+- `maxQueries` *Number*: Each request has an id, this is stored as static sized array. maxQueries is the size of this array, limiting the max number of inflight requests. Default: 10000.
+- `maxRedirects` *Number*: If you query for a single `A` record and get back `CNAME`, the lib will try to follow the chain and resolve the `CNAME` to A. The maximum number of steps is defined by the `maxRedirects`. Default: 0
+- `timeoutChecks` *Number*: Timeouts are checked each `timeoutChecks` ms, for large number of parallel request, you might want to increase this number. Default: `timeout` / 10
 
 #### `socket.on('query', query, port, host)`
 
@@ -41,9 +44,10 @@ Emitted when a dns query is received. The query is a [dns-packet](https://github
 
 Emitted when a dns response is received. The response is a [dns-packet](https://github.com/mafintosh/dns-packet)
 
-#### `var id = socket.query(query, port, [host], [callback])`
+#### `var id = socket.query(query, port, host, [callback])`
 
-Send a dns query. If host is omitted it defaults to localhost. When the remote replies the callback is called with `(err, response, query)` and an response is emitted as well. If the query times out the callback is called with an error.
+Send a dns query. When the remote replies the callback is called with `(err, response, query)` and an response is emitted as well. If the query times out the callback is called with an error.
+The `host` parameter can be an array, during resolve the lib will randomly select one host.
 
 Returns the query id
 

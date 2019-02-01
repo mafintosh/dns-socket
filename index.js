@@ -111,7 +111,8 @@ DNS.prototype._ontimeoutCheck = function () {
   const now = Date.now()
   for (let i = 0; i < this.maxQueries; i++) {
     const q = this._queries[i]
-    if ((!q) || (q.firstTry + this.retries * this.timeout < now)) {
+
+    if ((!q) || (now - q.firstTry < (q.tries + 1) * this.timeout)) {
       continue
     }
 
@@ -224,7 +225,8 @@ DNS.prototype.cancel = function (id) {
 DNS.prototype.setRetries = function (id, retries) {
   const q = this._queries[id]
   if (!q) return
-  q.retries = this.retries - 1 * retries
+  q.firstTry = q.firstTry - this.timeout * (retries - q.retries)
+  q.retries = this.retries - retries;
 }
 
 DNS.prototype._getNextEmptyId = function () {

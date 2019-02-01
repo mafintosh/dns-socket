@@ -226,7 +226,7 @@ DNS.prototype.setRetries = function (id, retries) {
   const q = this._queries[id]
   if (!q) return
   q.firstTry = q.firstTry - this.timeout * (retries - q.retries)
-  q.retries = this.retries - retries;
+  q.retries = this.retries - retries
 }
 
 DNS.prototype._getNextEmptyId = function () {

@@ -124,7 +124,7 @@ DNS.prototype._ontimeoutCheck = function () {
       continue
     }
     q.tries++
-    this.socket.send(q.buffer, 0, q.buffer.length, q.port, typeof q.host === 'object' ? q.host[Math.floor(q.host.length * Math.random())] : q.host)
+    this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1')
   }
 }
 
@@ -146,7 +146,7 @@ DNS.prototype._shouldRedirect = function (q, result) {
 
   const id = this._getNextEmptyId()
   if (id === -1) {
-    q.callback('Query array is full!')
+    q.callback(new Error('Query array is full!'))
     return true
   }
 
@@ -164,7 +164,7 @@ DNS.prototype._shouldRedirect = function (q, result) {
   q.tries = 0
   q.buffer = packet.encode(q.query)
   this._queries[id] = q
-  this.socket.send(q.buffer, 0, q.buffer.length, q.port, typeof q.host === 'object' ? q.host[Math.floor(q.host.length * Math.random())] : q.host)
+  this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1')
   return true
 }
 
@@ -179,7 +179,6 @@ DNS.prototype._onmessage = function (buffer, rinfo) {
   }
 
   if (message.type === 'response' && message.id) {
-    // const i = this._ids.indexOf(message.id);
     const q = this._queries[message.id - 1]
     if (q) {
       this._queries[message.id - 1] = null
@@ -272,7 +271,7 @@ DNS.prototype.query = function (query, port, host, cb) {
     port: port,
     host: host
   }
-  this.socket.send(buffer, 0, buffer.length, port, typeof host === 'object' ? host[Math.floor(host.length * Math.random())] : host)
+  this.socket.send(buffer, 0, buffer.length, port, Array.isArray(host) ? host[Math.floor(host.length * Math.random())] : host || '127.0.0.1')
   return id
 }
 

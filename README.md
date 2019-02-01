@@ -46,7 +46,7 @@ Emitted when a dns response is received. The response is a [dns-packet](https://
 
 #### `var id = socket.query(query, port, host, [callback])`
 
-Send a dns query. When the remote replies the callback is called with `(err, response, query)` and an response is emitted as well. If the query times out the callback is called with an error.
+Send a dns query. If host is omitted it defaults to `127.0.0.1`. When the remote replies the callback is called with `(err, response, query)` and an response is emitted as well. If the query times out the callback is called with an error.
 The `host` parameter can be an array, during resolve the lib will randomly select one host.
 
 Returns the query id

@@ -24,7 +24,7 @@ tape('query + response', function (t) {
         type: 'A',
         name: 'test'
       }]
-    }, socket.address().port, function (err, res) {
+    }, socket.address().port, socket.address().host, function (err, res) {
       socket.destroy()
       t.error(err)
       t.same(res.answers.length, 1)
@@ -58,7 +58,7 @@ tape('pass socket + query + response', function (t) {
         type: 'A',
         name: 'test'
       }]
-    }, socket.address().port, function (err, res) {
+    }, socket.address().port, socket.address().host, function (err, res) {
       socket.destroy()
       t.error(err)
       t.same(res.answers.length, 1)
@@ -87,7 +87,7 @@ tape('timeout', function (t) {
 
     const id = socket.query({
       questions: [{ type: 'A', name: 'test' }]
-    }, dummy.address().port, function (err) {
+    }, dummy.address().port, dummy.address().host, function (err) {
       if (done) return
       clearTimeout(timeout)
       socket.destroy()
@@ -119,7 +119,7 @@ tape('pass socket + timeout', function (t) {
 
       const id = socket.query({
         questions: [{ type: 'A', name: 'test' }]
-      }, dummy.address().port, function (err) {
+      }, dummy.address().port, socket.address().host, function (err) {
         if (done) return
         clearTimeout(timeout)
         socket.destroy()
@@ -153,7 +153,7 @@ tape('two queries + response', function (t) {
         type: 'A',
         name: 'test1'
       }]
-    }, socket.address().port, function (err, res) {
+    }, socket.address().port, socket.address().host, function (err, res) {
       t.error(err)
       t.same(res.answers.length, 1)
       t.same(res.answers[0].type, 'A')
@@ -167,7 +167,7 @@ tape('two queries + response', function (t) {
         type: 'A',
         name: 'test2'
       }]
-    }, socket.address().port, function (err, res) {
+    }, socket.address().port, socket.address().host, function (err, res) {
       t.error(err)
       t.same(res.answers.length, 1)
       t.same(res.answers[0].type, 'A')

@@ -38,7 +38,7 @@ function DNS (opts) {
   this.socket.on('close', onclose)
 
   function onerror (err) {
-    if (err.code === 'EACCES' || err.code === 'EADDRINUSE') {
+    if (['EACCES', 'EADDRINUSE', 'EADDRNOTAVAIL', 'ENOTFOUND'].indexOf(err.code) !== -1) {
       self.emit('error', err)
     } else {
       self.emit('warning', err)

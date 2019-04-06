@@ -19,7 +19,7 @@ function DNS (opts) {
 
   const self = this
 
-  this.retries = opts.retries || 5
+  this.retries = opts.retries || 0
   this.timeout = opts.timeout || 7500
   this.timeoutChecks = opts.timeoutChecks || (this.timeout / 10)
   this.destroyed = false
@@ -108,6 +108,7 @@ DNS.prototype.destroy = function (onclose) {
 }
 
 DNS.prototype._ontimeoutCheck = function () {
+  const that = this
   const now = Date.now()
   for (let i = 0; i < this.maxQueries; i++) {
     const q = this._queries[i]
@@ -124,7 +125,13 @@ DNS.prototype._ontimeoutCheck = function () {
       continue
     }
     q.tries++
-    this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1')
+    this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1', function (err) {
+      if (err){
+        q.callback(err)
+        // prevent further retries
+        q.tries = that.retries + 1
+      }
+    })
   }
 }
 
@@ -164,7 +171,7 @@ DNS.prototype._shouldRedirect = function (q, result) {
   q.tries = 0
   q.buffer = packet.encode(q.query)
   this._queries[id] = q
-  this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1')
+  this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1', function (err) { if (err) q.callback(err) })
   return true
 }
 
@@ -271,7 +278,7 @@ DNS.prototype.query = function (query, port, host, cb) {
     port: port,
     host: host
   }
-  this.socket.send(buffer, 0, buffer.length, port, Array.isArray(host) ? host[Math.floor(host.length * Math.random())] : host || '127.0.0.1')
+  this.socket.send(buffer, 0, buffer.length, port, Array.isArray(host) ? host[Math.floor(host.length * Math.random())] : host || '127.0.0.1', function (err) { if (err) cb(err) })
   return id
 }
 

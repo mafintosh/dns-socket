@@ -112,11 +112,11 @@ DNS.prototype._ontimeoutCheck = function () {
   for (let i = 0; i < this.maxQueries; i++) {
     const q = this._queries[i]
 
-    if ((!q) || (now - q.firstTry < (q.tries + 1) * this.timeout)) {
+    if ((!q) || (now - q.firstTry < (q.tries) * this.timeout)) {
       continue
     }
 
-    if (q.tries > this.retries) {
+    if (q.tries >= this.retries) {
       this._queries[i] = null
       this.inflight--
       this.emit('timeout', q.query, q.port, q.host)
@@ -161,7 +161,7 @@ DNS.prototype._shouldRedirect = function (q, result) {
   }
   q.redirects++
   q.firstTry = Date.now()
-  q.tries = 0
+  q.tries = 1
   q.buffer = packet.encode(q.query)
   this._queries[id] = q
   this.socket.send(q.buffer, 0, q.buffer.length, q.port, Array.isArray(q.host) ? q.host[Math.floor(q.host.length * Math.random())] : q.host || '127.0.0.1')
@@ -266,7 +266,7 @@ DNS.prototype.query = function (query, port, host, cb) {
     redirects: 0,
     firstTry: Date.now(),
     query: query,
-    tries: 0,
+    tries: 1,
     buffer: buffer,
     port: port,
     host: host

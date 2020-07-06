@@ -19,7 +19,7 @@ function DNS (opts) {
 
   const self = this
 
-  this.retries = opts.retries || 5
+  this.retries = opts.retries !== undefined ? opts.retries : 5
   this.timeout = opts.timeout || 7500
   this.timeoutChecks = opts.timeoutChecks || (this.timeout / 10)
   this.destroyed = false

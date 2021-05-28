@@ -13,7 +13,7 @@
     "test": "eslint --color *.js && tape test.js"
   },
   "dependencies": {
-    "dns-packet": "^5.1.2"
+    "dns-packet": "^5.2.4"
   },
   "devDependencies": {
     "eslint": "^5.12.1",

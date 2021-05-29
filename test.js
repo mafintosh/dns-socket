@@ -183,3 +183,39 @@ tape('two queries + response', function (t) {
     }
   })
 })
+
+tape('bind to bogus address fails gracefully', function (t) {
+  const socket = dns()
+  var err
+
+  new Promise(function (resolve, reject) {
+    socket.on('error', reject)
+    socket.bind(null, 'FOOBAR', resolve)
+  }).catch(function (e) {
+    err = e
+  }).then(function () {
+    t.equal(typeof (err), 'object')
+    t.equal(err instanceof Error, true)
+    t.equal(err.code, 'ENOTFOUND')
+    socket.destroy()
+    t.end()
+  })
+})
+
+tape('bind to an unavailable local address fails gracefully', function (t) {
+  const socket = dns()
+  var err
+
+  new Promise(function (resolve, reject) {
+    socket.on('error', reject)
+    socket.bind(null, '8.8.8.8', resolve)
+  }).catch(function (e) {
+    err = e
+  }).then(function () {
+    t.equal(typeof (err), 'object')
+    t.equal(err instanceof Error, true)
+    t.equal(err.code, 'EADDRNOTAVAIL')
+    socket.destroy()
+    t.end()
+  })
+})
